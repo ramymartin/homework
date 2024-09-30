@@ -1,4 +1,4 @@
-FROM tomcat:9.0
+FROM tomcat:10.0-jdk11-openjdk
 EXPOSE 80
 RUN apt update
 RUN apt install maven git -y
