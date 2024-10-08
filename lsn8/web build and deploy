@@ -1,0 +1,38 @@
+---
+- name: web config
+  hosts: web
+  become: yes
+
+  tasks:
+  - name: equipments install
+    apt:
+      name: maven
+      state: present
+
+  - name: get war file from git
+    git:
+      repo: https://github.com/efsavage/hello-world-war.git
+      dest: /tmp/hello-world-war
+      clone: yes
+      update: no
+
+  - name: war file package
+    command: 'mvn package /tmp/hello-world-war'
+
+- name: web server deploy
+  hosts: db
+  become: yes
+
+  tasks:
+  - name: image install
+    apt:
+      name: tomcat:alpine
+      state: present
+
+  - name: copy package war file to work directory
+    synchronize:
+      src:  "{{/tmp/hello-world-war/hello-world-war-1.0.0.war}}"
+      dest: "{{usr/local/tomcat/webapps/}}"
+      rsync_opts:
+        - "-e ssh -i ~/.ssh/link"
+      delegate_to: web
