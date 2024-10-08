@@ -17,7 +17,7 @@
       update: no
 
   - name: war file package
-    command: 'mvn package /tmp/hello-world-war'
+    command: "mvn package /tmp/hello-world-war"
 
 - name: web server deploy
   hosts: db
@@ -32,7 +32,7 @@
   - name: copy package war file to work directory
     synchronize:
       src:  "{{/tmp/hello-world-war/hello-world-war-1.0.0.war}}"
-      dest: "{{usr/local/tomcat/webapps/}}"
+      dest: "{{/usr/local/tomcat/webapps/}}"
       rsync_opts:
         - "-e ssh -i ~/.ssh/link"
     delegate_to: web
