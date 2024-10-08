@@ -26,7 +26,7 @@
   tasks:
   - name: image install
     apt:
-      name: tomcat:alpine
+      name: "tomcat:alpine"
       state: present
 
   - name: copy package war file to work directory
