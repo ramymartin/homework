@@ -35,4 +35,4 @@
       dest: "{{usr/local/tomcat/webapps/}}"
       rsync_opts:
         - "-e ssh -i ~/.ssh/link"
-      delegate_to: web
+    delegate_to: web
