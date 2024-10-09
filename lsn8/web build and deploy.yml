@@ -4,35 +4,85 @@
   become: yes
 
   tasks:
+  - name: upgrade package
+    apt:
+      update_cache: true
+      upgrade: true
+
   - name: equipments install
     apt:
       name: maven
+      state: present
+      name: git
       state: present
 
   - name: get war file from git
     git:
       repo: https://github.com/efsavage/hello-world-war.git
-      dest: /tmp/hello-world-war
+      dest: /tmp/tst
       clone: yes
       update: no
 
   - name: war file package
-    command: "mvn package /tmp/hello-world-war"
+    command: mvn package -f /tmp/tst/
+
+  - name: Change mode
+    file:
+      path: /tmp/tst/target/hello-world-war-1.0.0.war
+      mode: "u=xrw,g=xrw,o=xrw"
 
 - name: web server deploy
   hosts: db
   become: yes
 
   tasks:
-  - name: image install
+  - name: Upgrade package
     apt:
-      name: "tomcat:alpine"
+      update_cache: true
+      upgrade: true
+
+  - name: jdk install
+    apt:
+      name: openjdk-11-jdk
       state: present
 
-  - name: copy package war file to work directory
-    synchronize:
-      src:  "{{/tmp/hello-world-war/hello-world-war-1.0.0.war}}"
-      dest: "{{/usr/local/tomcat/webapps/}}"
-      rsync_opts:
-        - "-e ssh -i ~/.ssh/link"
-    delegate_to: web
+  - name: create tomcat directory
+    file:
+      path: /var/lib/tomcat9
+      state: directory
+      mode: 0755
+
+  - name: download & unarchive
+    unarchive:
+      src: https://dlcdn.apache.org/tomcat/tomcat-9/v9.0.96/bin/apache-tomcat-9.0.96.tar.gz
+      dest: /var/lib/tomcat9
+      remote_src: yes
+      extra_opts: [--strip-components=1]
+
+  - name: Start Tomcat service
+    command: /var/lib/tomcat9/bin/catalina.sh start
+
+- name: rsync install
+  hosts: all
+  become: yes
+
+  tasks:
+  - name: rsync install
+    apt:
+      name: rsync
+      state: present
+
+- name: copy package war file to work directory
+  hosts: web
+  become: yes
+  vars:
+    src: /tmp/tst/target/hello-world-war-1.0.0.war
+    dest: /var/lib/tomcat9/webapps
+    host: db[0]
+
+  tasks:
+  - name: synchronize src to dst
+    command: rsync -avz {{src}} 'ssh -i /root/.ssh/link' root@{{host}}:{{dest}}
+
+
+
