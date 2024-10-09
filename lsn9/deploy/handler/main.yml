@@ -1,2 +1,2 @@
 - name: tomcat start
-  command: {{ dest_folder }}/bin/catalina.sh start
+  command: "{{ dest_folder }}/bin/catalina.sh start"

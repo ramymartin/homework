@@ -1,14 +1,14 @@
 - name: get war file from git
   git:
     repo: https://github.com/efsavage/hello-world-war.git
-    dest: {{ src_folder }}
+    dest: "{{ src_folder }}"
     clone: yes
     update: no
 
 - name: war file package
-  command: mvn package -f {{ src_folder }}
+  command: mvn package -f "{{ src_folder }}"
 
 - name: Change mode
   file:
-    path: {{ src_folder }}/target/hello-world-war-1.0.0.war
+    path: "{{ src_folder }}/target/hello-world-war-1.0.0.war"
     mode: "u=xrw,g=xrw,o=xrw"
