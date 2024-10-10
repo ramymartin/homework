@@ -11,7 +11,9 @@
     remote_src: yes
     extra_opts: [--strip-components=1]
 
-- name: synchronize src to dst
-  hosts: db
-  command: rsync -avz "{{ src_folder }}/target/hello-world-war-1.0.0.war" "ssh -i /root/.ssh/link" root@84.252.133.221:"{{ dest_folder }}/webapps"
-  notify: tomcat start
+- name: copy  src to dst
+  fetch:
+    src: "{{ src_folder }}/target/hello-world-war-1.0.0.war"
+    dest: "{{ dest_folder }}/webapps"
+    notify: tomcat start
+

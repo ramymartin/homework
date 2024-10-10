@@ -11,4 +11,4 @@
 - name: Change mode
   file:
     path: "{{ src_folder }}/target/hello-world-war-1.0.0.war"
-    mode: "u=xrw,g=xrw,o=xrw"
+    mode: 0777
