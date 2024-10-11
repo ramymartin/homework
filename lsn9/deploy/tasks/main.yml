@@ -2,7 +2,7 @@
   file:
     path: "{{ dest_folder }}"
     state: directory
-    mode: 0755
+    mode: 0777
 
 - name: download & unarchive
   unarchive:
