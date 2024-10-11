@@ -59,30 +59,12 @@
       remote_src: yes
       extra_opts: [--strip-components=1]
 
+  - name: synchronize src to dst
+    fetch:
+      src: /tmp/tst/target/hello-world-war-1.0.0.war
+      dest: /var/lib/tomcat9/webapps
+
   - name: Start Tomcat service
     command: /var/lib/tomcat9/bin/catalina.sh start
-
-- name: rsync install
-  hosts: all
-  become: yes
-
-  tasks:
-  - name: rsync install
-    apt:
-      name: rsync
-      state: present
-
-- name: copy package war file to work directory
-  hosts: web
-  become: yes
-  vars:
-    src: /tmp/tst/target/hello-world-war-1.0.0.war
-    dest: /var/lib/tomcat9/webapps
-    host: db[0]
-
-  tasks:
-  - name: synchronize src to dst
-    command: rsync -avz {{src}} 'ssh -i /root/.ssh/link' root@{{host}}:{{dest}}
-
 
 
