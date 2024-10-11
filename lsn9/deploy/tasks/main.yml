@@ -15,5 +15,5 @@
   fetch:
     src: "{{ src_folder }}/target/hello-world-war-1.0.0.war"
     dest: "{{ dest_folder }}/webapps"
-    notify: tomcat start
+  notify: tomcat start
 
