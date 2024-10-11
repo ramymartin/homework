@@ -1,0 +1,2 @@
+src_folder: /tmp/build
+dest_folder: /var/lib/tomcat9
