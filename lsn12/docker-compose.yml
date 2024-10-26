@@ -1,0 +1,21 @@
+---
+version: '3'
+services:
+    web_build:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        volumes:
+            - webdata:/usr/local/tomcat/webapps/
+
+    web_deploy:
+        image: tomcat6
+        ports:
+            - '80:8080'
+        volumes:
+            - webdata:/usr/local/tomcat/webapps/
+        depends_on:
+            - web_build
+
+volumes:
+    webdata:
